@@ -2440,18 +2440,16 @@ var _GLTFLoader = ( function () {
 
 		}
 
-		for ( var gltfAttributeName in attributes ) {
+    for (var gltfAttributeName in attributes) {
 
-			var threeAttributeName = ATTRIBUTES[ gltfAttributeName ];
+      var threeAttributeName = ATTRIBUTES[gltfAttributeName] || gltfAttributeName.toLowerCase();
 
-			if ( ! threeAttributeName ) continue;
+      // Skip attributes already provided by e.g. Draco extension.
+      if (threeAttributeName in geometry.attributes) continue;
 
-			// Skip attributes already provided by e.g. Draco extension.
-			if ( threeAttributeName in geometry.attributes ) continue;
+      pending.push(assignAttributeAccessor(attributes[gltfAttributeName], threeAttributeName));
 
-			pending.push( assignAttributeAccessor( attributes[ gltfAttributeName ], threeAttributeName ) );
-
-		}
+    }
 
 		if ( primitiveDef.indices !== undefined && ! geometry.index ) {
 
